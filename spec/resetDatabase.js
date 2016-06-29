@@ -3,7 +3,7 @@
 var async = require('async');
 
 var resetDatabase = function(dbSession, callback) {
-	async.series(
+	async.series(  // clear all rows in keyword and category tables
 	    [
 		function(callback) {
 			dbSession.remove('keyword', '1', function(err) {

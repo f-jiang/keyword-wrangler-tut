@@ -18,10 +18,10 @@ describe('The API', function() {
 
 		async.series(
 			[
-				function(callback) {
+				function(callback) {    // clear db
 					resetDatabase(dbSession, callback);
 				},
-				function(callback) {
+				function(callback) {    // insert rows
 					dbSession.insert(
 						'keyword',
 						{'value': 'Aubergine', 'categoryID': 1},
@@ -44,9 +44,9 @@ describe('The API', function() {
 				}
 			],
 			function(err, results) {
-				request.get(
+				request.get(    // send GET request
 					{
-						'url': 'http://localhost:8080/api/keywords/',
+						'url': 'http://localhost:8080/api/keywords/', // directed at this address (same one as in index.js)
 						'json': true
 					},
 					function(err, res, body) {
