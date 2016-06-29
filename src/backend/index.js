@@ -1,3 +1,12 @@
+// to create migration file: 
+// ./node_modules/.bin/db-migrate create createKeywordAndCategoryTable --env test
+
+// to run db migration:
+// ./node_modules/.bin/db-migrate up --env test
+
+// to run a test with auto db migrations:
+// ./node_modules/.bin/db-migrate up --env test && ./node_modules/.bin/jasmine-node --verbose --captureExceptions ./spec/
+
 'use strict';
 
 var Server = require('./server.js').Server; // contains 'Server()' function from server.js
