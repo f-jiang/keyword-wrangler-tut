@@ -1,29 +1,11 @@
 'use strict';
 
-var Percolator = require('percolator').Percolator;
-var dbSession = require('../../src/backend/dbSession.js');
+var Server = require('./server.js').Server; // contains 'Server()' function from server.js
 
-var port = 8080;
-var server = Percolator({'port': port, 'autoLink': false});
-
-server.route('/api/keywords', {
-	GET: function(req, res) {  // respond to GET request - kind of like request handler
-		dbSession.fetchAll(
-			'SELECT id, value, categoryID FROM keyword ORDER BY id',
-			function(err, rows) {
-				if (err) {
-					console.log(err);
-					res.status.internalServerError(err);
-				} else {
-                    // response contains the keyword table
-					res.collection(rows).send();
-				}
-			}
-		);
-	}
-});
+// setting up the server is now donw in server.js
+var server = Server('8080'); // get a server object from the Server() function
 
 // start the server (ie begin listening to requests)
 server.listen(function() {
-	console.log('Server started and listening on port', port);
+	console.log('Server started and listening on port', server.options.port);
 });
