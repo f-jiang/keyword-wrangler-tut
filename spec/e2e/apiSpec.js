@@ -249,4 +249,61 @@ describe('The API', function() {
             }
         );
     });
+    
+    it('should remove a keyword when receiving a DELETE request at /api/keywords/id/', function(done) {
+        var expected = {
+           '_items': [
+               {'id': 1, 'value': 'Aubergine', 'categoryID': 1}
+           ]
+        };
+        
+        async.series(
+            [
+                function(callback) {
+                    dbSession.insert(
+                        'category',
+                        {'name': 'Vegetable'},
+                        function(err) { callback(err) }
+                    );
+                },
+                function(callback) {
+                    dbSession.insert(
+                        'keyword',
+                        {'value': 'Aubergine', 'categoryID': 1},
+                        function(err) { callback(err) }
+                    );
+                },
+                function(callback) {
+                    dbSession.insert(
+                        'keyword',
+                        {'value': 'Onion', 'categoryID': 1},
+                        function(err) { callback(err) }
+                    );
+                }
+            ],
+            function(err, results) {
+                if (err) throw(err);
+                request.del(
+                    {
+                        'url': 'http://localhost:8081/api/keywords/2/',
+                        'json': true
+                    },
+                    function(err, res, body) {
+                        if (err) throw(err);
+                        request.get(
+                            {
+                                'url': 'http://localhost:8081/api/keywords/',
+                                'json': true
+                            },
+                            function(err, res, body) {
+                                expect(res.statusCode).toBe(200);
+                                expect(body).toEqual(expected);
+                                done();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
 });
