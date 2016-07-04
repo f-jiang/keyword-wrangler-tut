@@ -43,6 +43,11 @@ var Server = function(port) {
         }
     });
     
+    /*
+        Note how we handle the /api/keywords/categories route first, and then the /api/key-
+        words/:id route. This is important, because if the /api/keywords/:id route would be defined
+        first, it would handle /api/keywords/categories requests, interpreting categories as the :id.    
+    */
     server.route('/api/keywords/categories', {
         GET: function(req, res) {
             dbSession.fetchAll(
@@ -58,7 +63,32 @@ var Server = function(port) {
             );
         }
     });
-        
+    
+    server.route('/api/keywords/:id', {
+        POST: function(req, res) {
+            var keywordId = req.uri.child();
+            req.onJson(function(err, keyword) {
+                if (err) {
+                    console.log(err);
+                    res.status.internalServerError(err);
+                } else {
+                    dbSession.query(
+                        'UPDATE keyword SET value = ?, categoryID = ? WHERE keyword.id = ?;',
+                        [keyword.value, keyword.categoryID, keywordId],
+                        function(err, result) {
+                            if (err) {
+                                console.log(err);
+                                res.status.internalServerError(err);
+                            } else {
+                                res.object({'status': 'ok'}).send();
+                            }
+                        }
+                    );
+                }
+            });
+        }
+    });
+    
     return server;
 };
 

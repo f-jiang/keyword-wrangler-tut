@@ -183,4 +183,70 @@ describe('The API', function() {
             }
         );
     });
+    
+    it('should update a keyword when receiving a POST request at /api/keywords/:id/', function(done) {
+        var expected = {
+            '_items': [
+                {'id': 1, 'value': 'Onion', 'categoryID': 2}
+            ]
+        };
+        
+        var body = {
+            'id': 1,
+            'value': 'Onion',
+            'categoryID': 2
+        };
+        
+        async.series(
+            [
+                function(callback) {
+                    dbSession.insert(
+                        'category',
+                        {'name': 'Vegetable'},
+                        function(err) { callback(err); }
+                    );
+                },
+                function(callback) {
+                    dbSession.insert(
+                        'category',
+                        {'name': 'Utility'},
+                        function(err) { callback(err); }
+                    );
+                },
+                function(callback) {
+                    dbSession.insert(
+                        'keyword',
+                        {'value': 'Aubergine', 'categoryID': 1},
+                        function(err) { callback(err); }
+                    );
+                }
+            ],
+            function(err, results) {
+                if (err) throw(err);
+                request.post(
+                    {
+                        // replace Aubergine with Onion
+                        'url': 'http://localhost:8081/api/keywords/1',
+                        'body': body,
+                        'json': true
+                    },
+                    function(err, res, body) {
+                        if (err) throw(err);
+                        expect(res.statusCode).toBe(200);
+                        request.get(
+                            {
+                                'url': 'http://localhost:8081/api/keywords/',
+                                'json': true
+                            },
+                            function(err, res, body) {
+                                expect(res.statusCode).toBe(200);
+                                expect(body).toEqual(expected);
+                                done();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
 });
