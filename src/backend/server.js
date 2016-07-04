@@ -19,6 +19,27 @@ var Server = function(port) {
                     }
                 }
             );
+        },
+        POST: function(req, res) {
+            req.onJson(function(err, newKeyword) {
+                if (err) {
+                    console.log(err);
+                    res.status.internalServerError(err);
+                } else {
+                    dbSession.query(
+                        'INSERT INTO keyword (value, categoryID) VALUES (?, ?);',
+                        [newKeyword.value, newKeyword.categoryID],
+                        function(err, result) {
+                            if (err) {
+                                console.log(err);
+                                res.status.internalServerError(err);
+                            } else {
+                                res.object({'status': 'ok', 'id': result.insertId}).send();
+                            }
+                        }
+                    );
+                }
+            })
         }
     });
     
