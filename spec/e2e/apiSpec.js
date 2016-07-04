@@ -1,4 +1,5 @@
-// to test enter ./node_modules/.bin/jasmine-node --verbose --captureExceptions ./spec/
+// to test enter KW_ENV=test ./node_modules/.bin/jasmine-node --verbose --captureExceptions ./spec/
+// KW_ENV possible values: test, dev, production
 'use strict';
 
 var request = require('request');

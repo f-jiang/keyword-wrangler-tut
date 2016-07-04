@@ -1,3 +1,5 @@
+// to start server:
+// KW_ENV=dev node src/backend/index.js
 'use strict';
 
 var Percolator = require('percolator').Percolator;

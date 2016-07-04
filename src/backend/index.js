@@ -5,7 +5,7 @@
 // ./node_modules/.bin/db-migrate up --env test
 
 // to run a test with auto db migrations:
-// ./node_modules/.bin/db-migrate up --env test && ./node_modules/.bin/jasmine-node --verbose --captureExceptions ./spec/
+// ./node_modules/.bin/db-migrate up --env test && KW_ENV=test ./node_modules/.bin/jasmine-node --verbose --captureExceptions ./spec/
 
 /*db migration workflow:
     1. changes in code reflect new db structure
